@@ -42,7 +42,21 @@ public class KnightBoard{
   }
   //gives a list of possibles sorted by number of paths
   private int[][] possibles(int row, int col){
-    return board;
+    int[][] moves= new int[][]{{1,2},{1,-2},{-1,2},{-1,-2},{2,1},{2,-1},{-2,1},{-2,-1}};
+    int ss=possiblesCount(row,col);
+    data[] movess= new data[ss];
+    int index=0;
+    for(int[] i : moves){
+      if(possible(row+i[0], col+i[1])){
+        movess[index]=new data(possiblesCount(row+i[0], col+i[1]),row+i[0], col+i[1]);
+        index+=1;}
+    }
+    Arrays.sort(movess);
+    int[][] tbr=new int[ss][2];
+    for(int i=0;i<movess.length;i++){
+      tbr[i]=movess[i].getlocation();
+    }
+    return tbr;
   }
   //gives number of possibles from a given square
   private int possiblesCount(int row, int col){
@@ -59,10 +73,11 @@ public class KnightBoard{
   }
   public static void main(String[] args) {
     KnightBoard A = new KnightBoard(8,8);
-    A.board[4][2]=1;
-    System.out.println(A.possiblesCount(0,0));
-    System.out.println(A.possiblesCount(0,2));
-    System.out.println(A.possiblesCount(3,4));
-
+    System.out.println("Possible Moves From 0,0");
+    System.out.println(Arrays.deepToString(A.possibles(0,0)));
+    System.out.println("Possible Moves From 5,5");
+    System.out.println(Arrays.deepToString(A.possibles(5,5)));
+    System.out.println("Possible Moves From 7,3");
+    System.out.println(Arrays.deepToString(A.possibles(7,3)));
 }
 }

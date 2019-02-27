@@ -44,17 +44,34 @@ public class KnightBoard{
     }
     return ff;
   }
-  /*private boolean solveH1(int row, int col, int move,int count){
+  //copy of solve but with helper set to solveH1, determines number of solutions
+  public int countSolutions(int startingRow, int startingCol) throws IllegalStateException,IllegalArgumentException{
+    //checks Illegal State Exception
+    for(int i=0;i<board.length;i++){
+      for(int j=0;j<board[0].length;j++){
+        if(board[i][j]!=0)throw new IllegalStateException();
+      }
+    }
+    if(startingRow<0||startingRow>=board.length||startingCol<0||startingCol>=board[0].length)throw new IllegalArgumentException();
+    int s =solveH1(startingRow,startingCol,1,0);
+    for(int i=0;i<board.length;i++){
+      for(int j=0;j<board[0].length;j++){
+        board[i][j]=0;
+      }}
+    return s;
+  }
+  //copy of solveH adjusted to determine count
+  private int solveH1(int row, int col, int move,int count){
     board[row][col]=move;
     int[][] x= possibles(row,col);
     if(move==board.length*board[0].length) return 1;
     if(x.length==0)return 0;
     for(int[] i : x){
-      count+=solveH1(i[0],i[1],move+1);
+      count+=solveH1(i[0],i[1],move+1,0);
       board[i[0]][i[1]]=0;
     }
     return count;
-  }*/
+  }
   //Recursive backtracking, most work, starts at row and column and goes down tree of all possibles in order of least moves possible there
   private boolean solveH(int row, int col, int move){
     board[row][col]=move;
@@ -100,13 +117,14 @@ public class KnightBoard{
     return row>=0&&col>=0&&row<board.length&&col<board[0].length&&board[row][col]==0;
   }
   public static void main(String[] args) {
-    KnightBoard A = new KnightBoard(8,8);
+    KnightBoard A = new KnightBoard(4,6);
     System.out.println("Testing Solver");
     System.out.println("Here's the Blank Board at the Start:");
     System.out.print(A);
+    int w = A.countSolutions(0,0);
     boolean f  = A.solve(0,0);
     if(f){
-      System.out.println("There's a possible answer if you start at 0,0");
+      System.out.println("There are "+w+" possible answers if you start at (0,0) \n Here's one of Them");
       System.out.print(A);
     }
     else{

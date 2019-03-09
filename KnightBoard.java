@@ -1,6 +1,22 @@
 import java.io.File;
 import java.util.Arrays;
+import java.util.Comparator;
 public class KnightBoard{
+private class data implements Comparable<data> {
+  private int[] location;
+  private int paths;
+  public data(int pathsa, int row, int col){
+    location= new int[]{row,col};
+    paths=pathsa;}
+  public int getpaths(){return paths;}
+  public int[] getlocation(){return location;}
+  public int compareTo(data otro){
+    if(otro.getpaths()<this.getpaths())return 1;
+    if(otro.getpaths()==this.getpaths())return 0;
+    return -1;
+  }
+}
+
   private int[][] board;
   public KnightBoard(int rows, int cols)throws IllegalArgumentException{
   //rows first index, cols second index
@@ -63,7 +79,7 @@ public class KnightBoard{
   //copy of solveH adjusted to determine count
   private int solveH1(int row, int col, int move,int count){
     board[row][col]=move;
-    int[][] x= possibles(row,col);
+    int[][] x= possibles1(row,col);
     if(move==board.length*board[0].length) return 1;
     if(x.length==0)return 0;
     for(int[] i : x){
@@ -86,6 +102,22 @@ public class KnightBoard{
     return false;
   }
   //gives a list of possibles sorted by number of paths
+  private int[][] possibles1(int row, int col){
+    int[][] moves= new int[][]{{1,2},{1,-2},{-1,2},{-1,-2},{2,1},{2,-1},{-2,1},{-2,-1}};
+    int ss=possiblesCount(row,col);
+    data[] movess= new data[ss];
+    int index=0;
+    for(int[] i : moves){
+      if(possible(row+i[0], col+i[1])){
+        movess[index]=new data(possiblesCount(row+i[0], col+i[1]),row+i[0], col+i[1]);
+        index+=1;}
+    }
+    int[][] tbr=new int[ss][2];
+    for(int i=0;i<movess.length;i++){
+      tbr[i]=movess[i].getlocation();
+    }
+    return tbr;
+  }
   private int[][] possibles(int row, int col){
     int[][] moves= new int[][]{{1,2},{1,-2},{-1,2},{-1,-2},{2,1},{2,-1},{-2,1},{-2,-1}};
     int ss=possiblesCount(row,col);
@@ -117,20 +149,6 @@ public class KnightBoard{
     return row>=0&&col>=0&&row<board.length&&col<board[0].length&&board[row][col]==0;
   }
   public static void main(String[] args) {
-    KnightBoard A = new KnightBoard(4,6);
-    System.out.println("Testing Solver");
-    System.out.println("Here's the Blank Board at the Start:");
-    System.out.print(A);
-    int w = A.countSolutions(0,0);
-    boolean f  = A.solve(0,0);
-    if(f){
-      System.out.println("There are "+w+" possible answers if you start at (0,0) \n Here's one of Them");
-      System.out.print(A);
-    }
-    else{
-      System.out.println("Couldn't find an answer");
-      System.out.print(A);
-    }
 
 }
 }
